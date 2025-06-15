@@ -293,7 +293,7 @@ export default definePlugin({
     name: "timezoneOnProfile",
     tags: ["12-Hour Format", "Time Font Size", "ShowModView", "DisableDiscoveryFilters"],
     description: "Add user-specific timezones to profiles.",
-    authors: [Devs.haz],
+    authors: [Devs.Hazrtine],
     settings,
     TimezoneTriggerInline,
     patches: [
