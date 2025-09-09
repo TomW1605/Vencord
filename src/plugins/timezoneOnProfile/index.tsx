@@ -197,7 +197,4 @@ export default definePlugin({
             }
         }
     ],
-    start() {
-        console.log(wreq.m[530]);
-    }
 });
