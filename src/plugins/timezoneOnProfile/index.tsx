@@ -20,6 +20,7 @@ import { definePluginSettings } from "@api/Settings";
 import { enableStyle } from "@api/Styles";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
+import { wreq } from "@webpack";
 import { React } from "@webpack/common";
 
 import timeZoneStyle from "./style.css?managed";
@@ -119,41 +120,43 @@ const TimezoneTriggerInline = ({ userId }: { userId: string; }) => {
     };
 
     return (
-        <div ref={containerRef} className="vc-tzonprofile-container">
-            <div
-                onClick={() => setOpen(!open)}
-                className="vc-tzonprofile-selector"
-            >
-                {renderTime()}
-            </div>
-
-            {open && (
-                <div className="vc-tzonprofile-dropdown">
-                    <input
-                        type="text"
-                        placeholder="Search timezones..."
-                        value={query}
-                        onChange={e => setQuery(e.currentTarget.value)}
-                        className="vc-tzonprofile-search"
-                    />
-                    <div className="vc-tzonprofile-list">
-                        {filtered.length > 0 ? filtered.map(tz => (
-                            <div
-                                key={tz}
-                                onClick={() => handleSelect(tz)}
-                                className="vc-tzonprofile-item"
-                            >
-                                {tz}
-                            </div>
-                        )) : (
-                            <div className="vc-tzonprofile-empty">
-                                No matches
-                            </div>
-                        )}
-                    </div>
+        <>
+            <div ref={containerRef} className="vc-tzonprofile-container">
+                <div
+                    onClick={() => setOpen(!open)}
+                    className="vc-tzonprofile-selector"
+                >
+                    {renderTime()}
                 </div>
-            )}
-        </div>
+
+                {open && (
+                    <div className="vc-tzonprofile-dropdown">
+                        <input
+                            type="text"
+                            placeholder="Search timezones..."
+                            value={query}
+                            onChange={e => setQuery(e.currentTarget.value)}
+                            className="vc-tzonprofile-search"/>
+                        <div className="vc-tzonprofile-list">
+                            {filtered.length > 0 ? filtered.map(tz => (
+                                <div
+                                    key={tz}
+                                    onClick={() => handleSelect(tz)}
+                                    className="vc-tzonprofile-item"
+                                >
+                                    {tz}
+                                </div>
+                            )) : (
+                                <div className="vc-tzonprofile-empty">
+                                    No matches
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div aria-hidden="true" class="dotSpacer__63ed3"></div>
+        </>
     );
 
 };
@@ -187,11 +190,14 @@ export default definePlugin({
     TimezoneTriggerInline,
     patches: [
         {
-            find: /!t\.isProvisional&&I\(\(0,r\.jsx\)\(s\.Z,\{/,
+            find: /!t\.isProvisional&&/,
             replacement: {
-                match: /!t\.isProvisional&&I\(\(0,r\.jsx\)\(s\.Z,\{/,
-                replace: "!t.isProvisional&&(0,r.jsx)($self.TimezoneTriggerInline,{userId:t.id}),(0,r.jsx)(\"div\",{className:\"dotSpacer__63ed3\"}),I((0,r.jsx)(s.Z,{"
+                match: /!t\.isProvisional&&/,
+                replace: "!t.isProvisional&&(0,r.jsx)($self.TimezoneTriggerInline,{userId:t.id}),"
             }
         }
-    ]
+    ],
+    start() {
+        console.log(wreq.m[530]);
+    }
 });
