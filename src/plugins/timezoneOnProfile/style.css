@@ -9,18 +9,19 @@
 
 .vc-tzonprofile-dropdown {
     position: absolute;
-    top: 110%;
-    left: 0;
     z-index: 1000;
     background-color: var(--background-floating);
     padding: 8px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgb(0 0 0 / 25%);
-    width: 220px;
+}
+
+.vc-tzonprofile-dropdown > input {
+    border: white 1px solid;
 }
 
 .vc-tzonprofile-search {
-    width: 100%;
+    width: -webkit-fill-available;
     padding: 6px 8px;
     margin-bottom: 6px;
     border-radius: 4px;
@@ -32,6 +33,11 @@
 .vc-tzonprofile-list {
     max-height: 250px;
     overflow-y: auto;
+    width: fit-content;
+}
+
+.vc-tzonprofile-list::-webkit-scrollbar {
+    display: none;
 }
 
 .vc-tzonprofile-item {
