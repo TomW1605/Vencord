@@ -133,7 +133,7 @@ const TimezoneTriggerInline = ({ userId }: { userId: string; }) => {
                     <div className="vc-tzonprofile-dropdown">
                         <input
                             type="text"
-                            placeholder="Search timezones..."
+                            placeholder="Search or scroll timezones..."
                             value={query}
                             onChange={e => setQuery(e.currentTarget.value)}
                             className="vc-tzonprofile-search"/>
@@ -155,7 +155,7 @@ const TimezoneTriggerInline = ({ userId }: { userId: string; }) => {
                     </div>
                 )}
             </div>
-            <div aria-hidden="true" class="dotSpacer__63ed3"></div>
+            <div aria-hidden="true" className="dotSpacer__63ed3"></div>
         </>
     );
 
@@ -180,7 +180,6 @@ const settings = definePluginSettings({
     }
 });
 
-// @ts-ignore
 export default definePlugin({
     name: "TimezoneOnProfile",
     tags: ["12-Hour Format", "Time Font Size", "ShowModView", "DisableDiscoveryFilters"],
@@ -190,10 +189,10 @@ export default definePlugin({
     TimezoneTriggerInline,
     patches: [
         {
-            find: /!t\.isProvisional&&/,
+            find: /!t\.isProvisional&&\i\(\(0,\i\.jsx\)\(\i\.\i,\{/,
             replacement: {
-                match: /!t\.isProvisional&&/,
-                replace: "!t.isProvisional&&(0,r.jsx)($self.TimezoneTriggerInline,{userId:t.id}),"
+                match: /(!t\.isProvisional&&)(\i\(\(0,(\i)\.jsx\)\(\i\.\i,\{)/,
+                replace: "$1(0,$3.jsx)($self.TimezoneTriggerInline,{userId:t.id}),$2"
             }
         }
     ],
