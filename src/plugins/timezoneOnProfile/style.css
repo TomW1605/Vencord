@@ -71,3 +71,8 @@
     justify-content: center;
     margin: 0;
 }
+
+.vc-tzonprofile-clear {
+    color: var(--text-danger);
+    font-weight: 500;
+}

@@ -29,15 +29,23 @@ enableStyle(timeZoneStyle);
 const cl = findByPropsLazy("dotSpacer", "userTag"); // lazy-load the module
 
 const timezones = [
-    "UTC", ...Intl.supportedValuesOf("timeZone")
+    "— Clear timezone —",
+    "UTC",
+    ...Intl.supportedValuesOf("timeZone")
 ];
 
+
 function setUserTimezone(userId: string, tz: string) {
+    const store = { ...settings.store.timezonesByUser } as Record<string, string>;
+
+    if (!tz) {
+        delete store[userId];
+    } else {
+        store[userId] = tz;
+    }
+
     // @ts-ignore
-    settings.store.timezonesByUser = {
-        ...settings.store.timezonesByUser,
-        [userId]: tz
-    };
+    settings.store.timezonesByUser = store;
 }
 
 export function update(tz: string): Date {
@@ -120,8 +128,14 @@ const TimezoneTriggerInline = ({ userId }: { userId: string; }) => {
     );
 
     const handleSelect = (tz: string) => {
-        setUserTimezone(userId, tz);
-        setSelectedTz(tz);
+        if (tz === "— Clear timezone —") {
+            setUserTimezone(userId, "");
+            setSelectedTz("");
+        } else {
+            setUserTimezone(userId, tz);
+            setSelectedTz(tz);
+        }
+
         setOpen(false);
     };
 
@@ -178,7 +192,11 @@ const TimezoneTriggerInline = ({ userId }: { userId: string; }) => {
                                 <div
                                     key={tz}
                                     onClick={() => handleSelect(tz)}
-                                    className="vc-tzonprofile-item"
+                                    className={
+                                        tz === "— Clear timezone —"
+                                            ? "vc-tzonprofile-item vc-tzonprofile-clear"
+                                            : "vc-tzonprofile-item"
+                                    }
                                 >
                                     {tz}
                                 </div>
