@@ -4,8 +4,5 @@
 
 ### Settings:
 
-- **Use 12 Hour Format**: Toggle between the 24-hour format and 12-hour format.
-
-
-- **Time Font Size**: Select between a font size of 10 to 20.
+- **Time Font Size**: Select between a font size (preferably from 10 to 24 px).
 
