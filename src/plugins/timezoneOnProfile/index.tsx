@@ -25,15 +25,21 @@ import { findByPropsLazy } from "@webpack";
 import { Timestamp, useEffect, useRef, useState } from "@webpack/common";
 
 import timeZoneStyle from "./style.css?managed";
+
 enableStyle(timeZoneStyle);
-const cl = findByPropsLazy("dotSpacer", "userTag"); // lazy-load the module
+
+const cl = findByPropsLazy("dotSpacer", "userTag");
+
+type TimezoneProps = {
+    userId: string;
+    [key: string]: any;
+};
 
 const timezones = [
     "— Clear timezone —",
     "UTC",
     ...Intl.supportedValuesOf("timeZone")
 ];
-
 
 function setUserTimezone(userId: string, tz: string) {
     const store = { ...settings.store.timezonesByUser } as Record<string, string>;
@@ -87,13 +93,15 @@ function getUserTimezone(userId: string): string {
     return (settings.store.timezonesByUser as unknown as Record<string, string>)[userId] ?? "";
 }
 
-const TimezoneTriggerInline = ({ userId }: { userId: string; }) => {
+const TimezoneTriggerInline = (props: TimezoneProps) => {
+    const { userId, tags } = props;
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState("");
     const [selectedTz, setSelectedTz] = useState(getUserTimezone(userId));
     const [currentTime, setCurrentTime] = useState<Date>(new Date(Date.now()));
-
     const containerRef = useRef<HTMLDivElement>(null);
+
+    if (!tags.props.themeType?.startsWith("MODAL") && !selectedTz) return null;
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -131,9 +139,11 @@ const TimezoneTriggerInline = ({ userId }: { userId: string; }) => {
         if (tz === "— Clear timezone —") {
             setUserTimezone(userId, "");
             setSelectedTz("");
+            setCurrentTime(new Date());
         } else {
             setUserTimezone(userId, tz);
             setSelectedTz(tz);
+            setCurrentTime(update(tz));
         }
 
         setOpen(false);
@@ -202,7 +212,7 @@ const TimezoneTriggerInline = ({ userId }: { userId: string; }) => {
                                 </div>
                             )) : (
                                 <div className="vc-tzonprofile-empty">
-                                    No matches
+                                    No matches.
                                 </div>
                             )}
                         </div>
@@ -240,7 +250,7 @@ export default definePlugin({
             find: "userTagUsername,",
             replacement: {
                 match: /(!(\i)\.isProvisional&&)(\i\(\(0,(\i)\.jsx\)\(\i\.\i,\{)/,
-                replace: "$1(0,$4.jsx)($self.TimezoneTriggerInline,{userId:$2.id}),$3"
+                replace: "$1(0,$4.jsx)($self.TimezoneTriggerInline,{userId:$2.id, ...arguments[0]}),$3"
             }
         }
     ],
