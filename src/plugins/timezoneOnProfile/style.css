@@ -96,3 +96,29 @@
     gap: 0.5em;
     padding-inline: 0.5em 1em;
 }
+
+.vc-tzonprofile-compact-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+
+.vc-tzonprofile-compact-reveal {
+    position: static !important;
+    left: auto !important;
+    max-width: none !important;
+}
+
+.vc-tzonprofile-compact-time {
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    vertical-align: baseline;
+    line-height: inherit;
+    white-space: nowrap;
+
+    /* TODO: make my extremely desperate css not look like a boomers first time using the "urgent" tag on emails sent to their children */
+}
