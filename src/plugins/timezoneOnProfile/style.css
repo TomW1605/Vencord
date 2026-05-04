@@ -104,3 +104,8 @@
 .vc-tzonprofile-time > span > span {
     margin-inline-end: .25rem !important;
 }
+
+.vc-tzonprofile-compact-wrap {
+    display: inline-flex;
+    align-items: baseline;
+}
