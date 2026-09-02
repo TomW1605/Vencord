@@ -62,11 +62,13 @@ export interface Settings {
     | "under-page"
     | "window"
     | undefined;
+    windowsMaterial: "none" | "mica" | "tabbed" | "acrylic";
     disableMinSize: boolean;
     winNativeTitleBar: boolean;
     plugins: {
         [plugin: string]: {
             enabled: boolean;
+            isFavorite?: boolean;
             [setting: string]: any;
         };
     };
@@ -103,6 +105,7 @@ const DefaultSettings: Settings = {
     transparent: false,
     winCtrlQ: false,
     macosVibrancyStyle: undefined,
+    windowsMaterial: "none",
     disableMinSize: false,
     winNativeTitleBar: false,
     plugins: {},
