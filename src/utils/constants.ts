@@ -646,6 +646,14 @@ export const Devs = /* #__PURE__*/ Object.freeze({
         name: "NightmareSan",
         id: 304239816466235392n
     },
+    haz: {
+        name: "hazrtine",
+        id: 430373875549732874n
+    },
+    Yuuki: {
+        name: "ayanea",
+        id: 570231031429595156n
+    },
     angelcube: {
         name: "angelcube",
         id: 958505257288208446n
@@ -655,8 +663,8 @@ export const Devs = /* #__PURE__*/ Object.freeze({
         id: 383365021415243776n
     },
     paige: {
-         name: "paige",
-         id: 1375697625864601650n
+        name: "paige",
+        id: 1375697625864601650n
     },
     jax: {
         name: "jax",
@@ -666,17 +674,21 @@ export const Devs = /* #__PURE__*/ Object.freeze({
         name: "yuna0x0",
         id: 213656926414831616n
     },
+    scattagain: {
+        name: "Amelia",
+        id: 1098234477626544180n
+    },
     Davri: {
         name: "Davri",
         id: 457579346282938368n
     },
-    haz: {
-        name: "hazrtine",
-        id: 430373875549732874n
+    Kaede: {
+        name: "Kaede",
+        id: 1492642701320126504n
     },
-    Yuuki: {
-        name: "ayanea",
-        id: 570231031429595156n
+    c0nnorgg: {
+        name: "c0nnorgg",
+        id: 1088882977985003620n,
     }
 } satisfies Record<string, Dev>);
 
