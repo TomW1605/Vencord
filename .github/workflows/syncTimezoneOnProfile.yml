@@ -1,0 +1,49 @@
+name: Merge Hazrtine/TimezoneOnProfile into main
+on:
+    schedule:
+        - cron: "0 */6 * * *"
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+concurrency:
+    group: sync-main
+    cancel-in-progress: false
+
+jobs:
+    merge:
+        runs-on: ubuntu-latest
+        env:
+            SOURCE_REPO: 'Hazrtine/Vencord'
+            SOURCE_BRANCH: 'TimezoneOnProfile'
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: main
+                  fetch-depth: 0
+
+            - name: Configure git
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+            - name: Fetch source branch
+              run: |
+                  git remote add source "https://github.com/$SOURCE_REPO.git"
+                  git fetch source "$SOURCE_BRANCH"
+
+            - name: Merge
+              run: |
+                  if git merge-base --is-ancestor "source/$SOURCE_BRANCH" HEAD; then
+                      echo "main already contains $SOURCE_REPO/$SOURCE_BRANCH, nothing to do"
+                      exit 0
+                  fi
+
+                  git merge --no-edit -m "Merge remote-tracking branch '$SOURCE_REPO/$SOURCE_BRANCH'" "source/$SOURCE_BRANCH" || {
+                      echo "::error::Merge conflict merging $SOURCE_REPO/$SOURCE_BRANCH into main, resolve it manually"
+                      git merge --abort
+                      exit 1
+                  }
+
+                  git push origin main
