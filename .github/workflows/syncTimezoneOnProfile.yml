@@ -6,17 +6,36 @@ on:
 
 permissions:
     contents: write
+    actions: write # needed to dispatch build.yml
 
 concurrency:
     group: sync-main
     cancel-in-progress: false
 
+env:
+    SOURCE_REPO: 'Hazrtine/Vencord'
+    SOURCE_BRANCH: 'TimezoneOnProfile'
+
 jobs:
-    merge:
+    # cheap check via the compare API so we don't checkout/fetch when there's nothing new
+    check:
         runs-on: ubuntu-latest
-        env:
-            SOURCE_REPO: 'Hazrtine/Vencord'
-            SOURCE_BRANCH: 'TimezoneOnProfile'
+        outputs:
+            ahead_by: ${{ steps.compare.outputs.ahead_by }}
+        steps:
+            - name: Check for new commits
+              id: compare
+              run: |
+                  ahead_by=$(gh api "repos/$GITHUB_REPOSITORY/compare/main...${SOURCE_REPO%%/*}:$SOURCE_BRANCH" --jq .ahead_by)
+                  echo "$SOURCE_REPO/$SOURCE_BRANCH has $ahead_by commit(s) not in main"
+                  echo "ahead_by=$ahead_by" >> "$GITHUB_OUTPUT"
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    merge:
+        needs: check
+        if: needs.check.outputs.ahead_by != '0'
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
               with:
@@ -34,6 +53,7 @@ jobs:
                   git fetch source "$SOURCE_BRANCH"
 
             - name: Merge
+              id: merge
               run: |
                   if git merge-base --is-ancestor "source/$SOURCE_BRANCH" HEAD; then
                       echo "main already contains $SOURCE_REPO/$SOURCE_BRANCH, nothing to do"
@@ -47,3 +67,11 @@ jobs:
                   }
 
                   git push origin main
+                  echo "merged=true" >> "$GITHUB_OUTPUT"
+
+            # pushes made with GITHUB_TOKEN don't trigger other workflows, so kick off the build manually
+            - name: Trigger build
+              if: steps.merge.outputs.merged == 'true'
+              run: gh workflow run build.yml --ref main
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
