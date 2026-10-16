@@ -24,7 +24,7 @@
 
 .vc-tzonprofile-time > *::before {
     content: "•";
-    padding: 0 4px 0 4px;
+    padding: 0 4px;
 }
 
 [class*="clickable"]:has(.vc-tzonprofile-container) {
